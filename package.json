@@ -6,6 +6,7 @@
     "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
     "start:frontend": "ng serve",
     "start:backend": "cd server && node server.js",
+    "start:firebase": "ng serve --configuration=firebase --disable-host-check",
     "install:all": "npm install && cd server && npm install",
     "build": "ng build",
     "vercel-build": "npm run install:all && ng build --configuration production",
