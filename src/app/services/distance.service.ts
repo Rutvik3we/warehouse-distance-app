@@ -9,21 +9,32 @@ import { map, catchError } from 'rxjs/operators';
 })
 export class DistanceService {
   private readonly API_KEY = 'AIzaSyBl_7FSEUCBqFTG4M5n9YceS5tGeGF_UhM';
-  private readonly BASE_URL = window.location.hostname.includes('cloudworkstations.dev') 
-    ? 'https://3000-firebase-warehouse-distance-app-1748695554025.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev/api/distance'
-    : 'http://localhost:3000/api/distance';
+  private readonly BASE_URL = this.getBaseUrl();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    console.log('Using API URL:', this.BASE_URL);
+  }
+
+  private getBaseUrl(): string {
+    const hostname = window.location.hostname;
+    if (hostname.includes('cloudworkstations.dev')) {
+      return 'https://3000-firebase-warehouse-distance-app-1748695554025.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev/api/distance';
+    }
+    return 'http://localhost:3000/api/distance';
+  }
 
   calculateDistance(userZipCode: string, warehouses: Warehouse[]): Observable<DistanceResult[]> {
     const destinations = warehouses.map(w => w.zipCode).join('|');
     const url = `${this.BASE_URL}?origins=${userZipCode}&destinations=${destinations}&key=${this.API_KEY}`;
 
+    console.log('Making request to:', url);
+
     return this.http.get(url, { 
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
-      }
+      },
+      withCredentials: true
     }).pipe(
       map((response: any) => {
         if (response.status !== 'OK') {

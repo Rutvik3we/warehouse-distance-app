@@ -4,6 +4,12 @@ const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Define allowed origins
+const allowedOrigins = [
+  'http://localhost:4200',
+  'https://4200-firebase-warehouse-distance-app-1748695554025.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev'
+];
+
 // CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
@@ -12,12 +18,8 @@ const corsOptions = {
       callback(null, true);
       return;
     }
-    
-    // Allow localhost and Firebase Studio domains
-    if (
-      origin.startsWith('http://localhost') ||
-      origin.includes('cloudworkstations.dev')
-    ) {
+
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -26,14 +28,22 @@ const corsOptions = {
   credentials: true,
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  preflightContinue: false // This is important for handling preflight requests
 };
 
 // Enable CORS with options
 app.use(cors(corsOptions));
 
-// Handle preflight requests
-app.options('*', cors(corsOptions));
+// Handle preflight requests explicitly
+app.options('*', (req, res) => {
+  // Set CORS headers explicitly for preflight
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.status(200).send();
+});
 
 app.use(express.json());
 
@@ -43,6 +53,10 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/api/distance', async (req, res) => {
+  // Set CORS headers for this endpoint specifically
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Credentials', 'true');
+
   try {
     const { origins, destinations, key } = req.query;
     
@@ -83,7 +97,9 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Start server
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server running at http://0.0.0.0:${port}`);
   console.log(`Health check available at http://0.0.0.0:${port}/health`);
+  console.log('Allowed origins:', allowedOrigins);
 }); 
