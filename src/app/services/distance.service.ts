@@ -9,9 +9,7 @@ import { map, catchError } from 'rxjs/operators';
 })
 export class DistanceService {
   private readonly API_KEY = 'AIzaSyBl_7FSEUCBqFTG4M5n9YceS5tGeGF_UhM';
-  private readonly BASE_URL = window.location.hostname.includes('cloudworkstations.dev') 
-    ? 'https://3000-firebase-warehouse-distance-app-1748695554025.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev/api/distance'
-    : 'http://localhost:3000/api/distance';
+  private readonly BASE_URL = 'http://localhost:3000/api/distance';
 
   constructor(private http: HttpClient) { }
 
@@ -19,12 +17,7 @@ export class DistanceService {
     const destinations = warehouses.map(w => w.zipCode).join('|');
     const url = `${this.BASE_URL}?origins=${userZipCode}&destinations=${destinations}&key=${this.API_KEY}`;
 
-    return this.http.get(url, { 
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    }).pipe(
+    return this.http.get(url).pipe(
       map((response: any) => {
         if (response.status !== 'OK') {
           throw new Error('Failed to get distance data');
