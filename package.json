@@ -8,6 +8,7 @@
     "start:backend": "cd server && node server.js",
     "install:all": "npm install && cd server && npm install",
     "build": "ng build",
+    "vercel-build": "npm run install:all && ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

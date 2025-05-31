@@ -2,11 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Enable CORS for all routes
 app.use(cors({
-  origin: 'http://localhost:4200', // Angular app URL
+  origin: process.env.VERCEL_ENV ? [process.env.VERCEL_URL, 'https://*.vercel.app'] : 'http://localhost:4200',
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type']
 }));
