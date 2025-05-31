@@ -3,26 +3,17 @@ import { Observable } from 'rxjs';
 import { Warehouse, DistanceResult } from '../models/warehouse.model';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DistanceService {
-  private readonly API_KEY = 'AIzaSyBl_7FSEUCBqFTG4M5n9YceS5tGeGF_UhM';
-  private readonly BASE_URL = this.getBaseUrl();
+  private readonly API_KEY = environment.googleMapsApiKey;
+  private readonly BASE_URL = environment.apiUrl;
 
   constructor(private http: HttpClient) {
     console.log('Using API URL:', this.BASE_URL);
-  }
-
-  private getBaseUrl(): string {
-    const hostname = window.location.hostname;
-    if (hostname.includes('cloudworkstations.dev')) {
-      // Get the workspace URL prefix (everything before the port number)
-      const workspacePrefix = hostname.split('-')[0];
-      return `https://${workspacePrefix}-3000-firebase-warehouse-distance-app-1748695554025.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev/api/distance`;
-    }
-    return 'http://localhost:3000/api/distance';
   }
 
   calculateDistance(userZipCode: string, warehouses: Warehouse[]): Observable<DistanceResult[]> {
@@ -31,12 +22,7 @@ export class DistanceService {
 
     console.log('Making request to:', url);
 
-    return this.http.get(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    }).pipe(
+    return this.http.get(url).pipe(
       map((response: any) => {
         if (response.status !== 'OK') {
           throw new Error('Failed to get distance data');
