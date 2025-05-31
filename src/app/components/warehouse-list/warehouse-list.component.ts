@@ -17,14 +17,14 @@ import { trigger, transition, style, animate } from '@angular/animations';
         <mat-card *ngFor="let result of distanceResults; let i = index" 
                   [class.nearest]="i === 0"
                   class="warehouse-card">
-          <mat-card-header>
+        <mat-card-header>
             <mat-icon mat-card-avatar [class.nearest-icon]="i === 0">
               {{ i === 0 ? 'star' : 'warehouse' }}
             </mat-icon>
-            <mat-card-title>{{ result.warehouse.name }}</mat-card-title>
-            <mat-card-subtitle>{{ result.warehouse.address }}</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
+          <mat-card-title>{{ result.warehouse.name }}</mat-card-title>
+          <mat-card-subtitle>{{ result.warehouse.address }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
             <div class="distance-info">
               <div class="info-item">
                 <mat-icon>directions_car</mat-icon>
@@ -35,8 +35,8 @@ import { trigger, transition, style, animate } from '@angular/animations';
                 <span>{{ result.duration }}</span>
               </div>
             </div>
-          </mat-card-content>
-        </mat-card>
+        </mat-card-content>
+      </mat-card>
       </div>
     </div>
   `,

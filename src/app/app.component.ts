@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     <div class="app-container">
       <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="accent"></mat-progress-bar>
       <div class="header">
-        <h1>Warehouse Distance Calculator</h1>
+      <h1>Warehouse Distance Calculator</h1>
         <p class="subtitle">Find the nearest warehouse to your location</p>
       </div>
       <app-zip-code-input (zipCodeSubmit)="onZipCodeSubmit($event)" [isLoading]="isLoading"></app-zip-code-input>
