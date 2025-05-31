@@ -1,0 +1,17 @@
+{
+  "name": "warehouse-distance-server",
+  "version": "1.0.0",
+  "description": "Backend server for warehouse distance calculator",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
