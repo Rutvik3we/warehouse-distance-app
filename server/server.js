@@ -4,13 +4,36 @@ const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Enable CORS for all routes with more permissive configuration
-app.use(cors({
-  origin: true, // Allow all origins
+// CORS configuration
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, postman)
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+    
+    // Allow localhost and Firebase Studio domains
+    if (
+      origin.startsWith('http://localhost') ||
+      origin.includes('cloudworkstations.dev')
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200
+};
+
+// Enable CORS with options
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 
@@ -18,9 +41,6 @@ app.use(express.json());
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
-
-// Add OPTIONS handling for preflight requests
-app.options('*', cors());
 
 app.get('/api/distance', async (req, res) => {
   try {
@@ -63,22 +83,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Add headers before the routes are defined
-app.use(function (req, res, next) {
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  // Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  // Request headers you wish to allow
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  // Pass to next layer of middleware
-  next();
-});
-
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server running at http://0.0.0.0:${port}`);
-  console.log('Health check available at http://0.0.0.0:${port}/health');
+  console.log(`Health check available at http://0.0.0.0:${port}/health`);
 }); 
