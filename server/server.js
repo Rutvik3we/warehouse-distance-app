@@ -4,12 +4,25 @@ const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Enable CORS for all routes
+// CORS configuration
 app.use(cors({
-  origin: '*',  // Allow all origins in development
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, postman)
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+
+    // Allow localhost and cloudworkstations.dev domains
+    if (origin.includes('localhost') || origin.includes('cloudworkstations.dev')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  optionsSuccessStatus: 200
 }));
 
 app.use(express.json());
@@ -60,7 +73,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-  console.log('Health check available at http://localhost:3000/health');
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running at http://0.0.0.0:${port}`);
+  console.log(`Health check available at http://0.0.0.0:${port}/health`);
 }); 
