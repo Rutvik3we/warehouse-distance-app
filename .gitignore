@@ -56,4 +56,30 @@ npm-debug.log*
 .env.local
 .env.development.local
 .env.test.local
-.env.production.local 
+.env.production.local
+
+# Vercel
+.vercel
+.vercel/
+
+# Large files and build artifacts
+*.zip
+*.tar.gz
+*.tgz
+*.log
+*.dump
+/dist-server
+/.webpack
+/.next
+/.build
+/build
+*.map
+
+# Package manager locks (optional, but can be large)
+# package-lock.json
+# yarn.lock
+
+# Cache directories
+.cache/
+.npm/
+.pnpm-store/
