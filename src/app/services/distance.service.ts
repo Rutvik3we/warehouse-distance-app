@@ -18,9 +18,14 @@ export class DistanceService {
   private getBaseUrl(): string {
     const hostname = window.location.hostname;
     if (hostname.includes('cloudworkstations.dev')) {
-      return 'https://3000-firebase-warehouse-distance-app-1748695554025.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev/api/distance';
+      // Replace 4200 with 8080 in the URL for Firebase Studio
+      return window.location.href
+        .replace('4200', '8080')
+        .replace(/\/$/, '') // Remove trailing slash if present
+        .replace(/\/[^/]*$/, '') // Remove any path
+        + '/api/distance';
     }
-    return 'http://localhost:3000/api/distance';
+    return 'http://localhost:8080/api/distance';
   }
 
   calculateDistance(userZipCode: string, warehouses: Warehouse[]): Observable<DistanceResult[]> {

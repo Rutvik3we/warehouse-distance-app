@@ -2,12 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 // Define allowed origins
 const allowedOrigins = [
   'http://localhost:4200',
-  'https://4200-firebase-warehouse-distance-app-1748695554025.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev'
+  'http://localhost:8080',
+  'https://4200-firebase-warehouse-distance-app-1748695554025.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev',
+  'https://8080-firebase-warehouse-distance-app-1748695554025.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev'
 ];
 
 // CORS configuration
@@ -19,7 +21,8 @@ const corsOptions = {
       return;
     }
 
-    if (allowedOrigins.includes(origin)) {
+    // Check if the origin is allowed or matches the cloudworkstations.dev pattern
+    if (allowedOrigins.includes(origin) || origin.includes('cloudworkstations.dev')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -29,7 +32,7 @@ const corsOptions = {
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   optionsSuccessStatus: 200,
-  preflightContinue: false // This is important for handling preflight requests
+  preflightContinue: false
 };
 
 // Enable CORS with options
@@ -37,7 +40,6 @@ app.use(cors(corsOptions));
 
 // Handle preflight requests explicitly
 app.options('*', (req, res) => {
-  // Set CORS headers explicitly for preflight
   res.header('Access-Control-Allow-Origin', req.headers.origin);
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
