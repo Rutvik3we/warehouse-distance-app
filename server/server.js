@@ -4,11 +4,12 @@ const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Enable CORS for all routes
+// Enable CORS for all routes with more permissive configuration
 app.use(cors({
-  origin: process.env.VERCEL_ENV ? [process.env.VERCEL_URL, 'https://*.vercel.app'] : 'http://localhost:4200',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type']
+  origin: true, // Allow all origins
+  credentials: true,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 app.use(express.json());
@@ -17,6 +18,9 @@ app.use(express.json());
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
+
+// Add OPTIONS handling for preflight requests
+app.options('*', cors());
 
 app.get('/api/distance', async (req, res) => {
   try {
@@ -59,7 +63,22 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-  console.log('Health check available at http://localhost:3000/health');
+// Add headers before the routes are defined
+app.use(function (req, res, next) {
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  // Pass to next layer of middleware
+  next();
+});
+
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running at http://0.0.0.0:${port}`);
+  console.log('Health check available at http://0.0.0.0:${port}/health');
 }); 
