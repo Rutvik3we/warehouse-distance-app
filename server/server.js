@@ -4,31 +4,39 @@ const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Define allowed origins
+// Define allowed origins with wildcard for Firebase Studio subdomains
 const allowedOrigins = [
   'http://localhost:4200',
   'http://localhost:3000',
-  'https://4200-firebase-warehouse-distance-app-1748695554025.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev',
-  'https://3000-firebase-warehouse-distance-app-1748695554025.cluster-htdgsbmflbdmov5xrjithceibm.cloudworkstations.dev'
+  '.cloudworkstations.dev'  // This will match all Firebase Studio domains
 ];
 
-console.log('Allowed origins:', allowedOrigins);
-
-// CORS middleware
+// CORS configuration for Firebase Studio
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin) || 
-        origin.includes('localhost') || 
-        origin.includes('cloudworkstations.dev')) {
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    // Check if the origin matches any of our allowed origins
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (allowedOrigin.startsWith('.')) {
+        // For domain suffixes (like .cloudworkstations.dev)
+        return origin.endsWith(allowedOrigin);
+      }
+      return origin === allowedOrigin;
+    });
+
+    if (isAllowed) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('CORS policy: Origin not allowed'));
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
-  exposedHeaders: ['Access-Control-Allow-Origin'],
   optionsSuccessStatus: 200
 };
 
@@ -44,14 +52,25 @@ app.use(express.urlencoded({ extended: true }));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.json({ status: 'ok', environment: 'Firebase Studio' });
 });
 
 // Distance calculation endpoint
 app.get('/api/distance', async (req, res) => {
   try {
-    const { origins, destinations, key } = req.query;
-    
+    const origins = req.query.origins;
+    const destinations = req.query.destinations;
+    const key = req.query.key;
+
+    // Log request details for debugging
+    console.log('Received request:', {
+      origins,
+      destinations,
+      origin: req.headers.origin,
+      host: req.headers.host
+    });
+
     // Validate required parameters
     if (!origins || !destinations || !key) {
       return res.status(400).json({ 
@@ -72,6 +91,9 @@ app.get('/api/distance', async (req, res) => {
     const response = await axios.get(apiUrl);
     
     console.log('Received response from Google Maps API');
+    
+    // Set CORS headers explicitly
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.json(response.data);
   } catch (error) {
     console.error('Error details:', {
@@ -104,7 +126,8 @@ app.use((err, req, res, next) => {
     message: err.message,
     stack: err.stack,
     url: req.url,
-    method: req.method
+    method: req.method,
+    headers: req.headers
   });
   
   res.status(err.status || 500).json({ 
@@ -114,8 +137,17 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(port, '0.0.0.0', () => {
+const server = app.listen(port, '0.0.0.0', () => {
   console.log(`Server running at http://0.0.0.0:${port}`);
   console.log(`Health check available at http://0.0.0.0:${port}/health`);
+  console.log('Server configured for Firebase Studio environment');
   console.log('Allowed origins:', allowedOrigins);
+});
+
+// Handle server errors
+server.on('error', (error) => {
+  console.error('Server error:', error);
+  if (error.code === 'EADDRINUSE') {
+    console.error(`Port ${port} is already in use`);
+  }
 }); 
