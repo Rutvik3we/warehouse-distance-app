@@ -8,7 +8,8 @@ const port = process.env.PORT || 3000;
 const allowedOrigins = [
   'http://localhost:4200',
   'http://localhost:3000',
-  '.cloudworkstations.dev'  // This will match all Firebase Studio domains
+  '.cloudworkstations.dev',
+  'https://warehouse-distance-app-jsf5.vercel.app' // This will match all Firebase Studio domains
 ];
 
 // CORS configuration for Firebase Studio
