@@ -33,7 +33,8 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
 
           <app-warehouse-list 
             [distanceResults]="distanceResults" 
-            [isLoading]="isLoading">
+            [isLoading]="isLoading"
+            [originZipCode]="currentZipCode">
           </app-warehouse-list>
         </div>
       </div>
@@ -258,6 +259,7 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
 export class AppComponent {
   distanceResults: DistanceResult[] = [];
   isLoading = false;
+  currentZipCode: string = '';
 
   constructor(
     private warehouseService: WarehouseService,
@@ -267,6 +269,7 @@ export class AppComponent {
 
   onZipCodeSubmit(zipCode: string) {
     this.isLoading = true;
+    this.currentZipCode = zipCode;
     this.warehouseService.getWarehouses().subscribe(warehouses => {
       this.distanceService.calculateDistance(zipCode, warehouses)
         .subscribe({

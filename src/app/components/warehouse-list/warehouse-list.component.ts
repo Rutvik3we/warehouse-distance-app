@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DistanceResult, Warehouse } from '../../models/warehouse.model';
 import { WarehouseService } from '../../services/warehouse.service';
+import { ZipCodeService } from '../../services/zip-code.service';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 
 @Component({
@@ -33,6 +34,13 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
             </div>
             <div class="card-content">
               <div class="info-row">
+                <div class="info-item">
+                  <mat-icon>my_location</mat-icon>
+                  <div class="info-text">
+                    <span class="label">To Location</span>
+                    <span class="value">{{ originZipCode }}{{ getStateDisplay(originZipCode) }}, USA</span>
+                  </div>
+                </div>
                 <div class="info-item">
                   <mat-icon>directions_car</mat-icon>
                   <div class="info-text">
@@ -349,9 +357,13 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 export class WarehouseListComponent implements OnInit {
   @Input() distanceResults: DistanceResult[] = [];
   @Input() isLoading = false;
+  @Input() originZipCode: string = '';
   warehouses: Warehouse[] = [];
 
-  constructor(private warehouseService: WarehouseService) {}
+  constructor(
+    private warehouseService: WarehouseService,
+    private zipCodeService: ZipCodeService
+  ) {}
 
   ngOnInit() {
     this.loadWarehouses();
@@ -361,5 +373,10 @@ export class WarehouseListComponent implements OnInit {
     this.warehouseService.getWarehouses().subscribe(warehouses => {
       this.warehouses = warehouses;
     });
+  }
+
+  getStateDisplay(zipCode: string): string {
+    const stateInfo = this.zipCodeService.getStateFromZipCode(zipCode);
+    return stateInfo ? `, ${stateInfo.state}` : '';
   }
 } 
