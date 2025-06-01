@@ -109,6 +109,7 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      padding: 0 16px;
     }
 
     .header {
@@ -154,6 +155,7 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
       color: rgba(255, 255, 255, 0.8);
       margin: 0;
       font-weight: 400;
+      padding: 0 16px;
     }
 
     .scrollable-content {
@@ -185,8 +187,12 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
     }
 
     @media (max-width: 768px) {
+      .content-wrapper {
+        padding: 0 12px;
+      }
+
       .header {
-        padding: 16px;
+        padding: 16px 12px;
       }
 
       .app-icon {
@@ -208,16 +214,31 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
 
       .subtitle {
         font-size: 16px;
+        padding: 0 12px;
       }
 
       .scrollable-content {
-        padding: 16px;
+        padding: 16px 12px;
+      }
+
+      .sphere-1 {
+        width: 400px;
+        height: 400px;
+      }
+
+      .sphere-2 {
+        width: 300px;
+        height: 300px;
       }
     }
 
     @media (max-width: 480px) {
+      .content-wrapper {
+        padding: 0 8px;
+      }
+
       .header {
-        padding: 12px;
+        padding: 12px 8px;
       }
 
       .app-icon {
@@ -239,10 +260,42 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
 
       .subtitle {
         font-size: 14px;
+        padding: 0 8px;
       }
 
       .scrollable-content {
-        padding: 12px;
+        padding: 12px 8px;
+      }
+
+      .sphere-1 {
+        width: 300px;
+        height: 300px;
+      }
+
+      .sphere-2 {
+        width: 200px;
+        height: 200px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      .subtitle {
+        font-size: 13px;
+      }
+
+      .app-icon {
+        width: 40px;
+        height: 40px;
+      }
+
+      .app-icon mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
       }
     }
   `],

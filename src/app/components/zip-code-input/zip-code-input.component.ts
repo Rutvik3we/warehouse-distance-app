@@ -38,6 +38,7 @@ import { FormControl, Validators } from '@angular/forms';
     .input-section {
       text-align: center;
       margin-bottom: 40px;
+      width: 100%;
     }
 
     h1 {
@@ -46,6 +47,7 @@ import { FormControl, Validators } from '@angular/forms';
       font-weight: 500;
       margin: 0 0 32px;
       opacity: 0.9;
+      padding: 0 16px;
     }
 
     .input-container {
@@ -55,6 +57,7 @@ import { FormControl, Validators } from '@angular/forms';
       padding: 24px;
       max-width: 600px;
       margin: 0 auto;
+      width: 90%;
     }
 
     h2 {
@@ -122,6 +125,7 @@ import { FormControl, Validators } from '@angular/forms';
       justify-content: center;
       gap: 8px;
       transition: all 0.3s ease;
+      width: 100%;
     }
 
     .submit-button:hover:not(:disabled) {
@@ -140,15 +144,20 @@ import { FormControl, Validators } from '@angular/forms';
     }
 
     @media (max-width: 768px) {
+      .input-section {
+        margin-bottom: 32px;
+      }
+
       h1 {
         font-size: 20px;
         margin-bottom: 24px;
-        padding: 0 16px;
+        padding: 0 24px;
       }
 
       .input-container {
         margin: 0 16px;
         padding: 20px;
+        width: auto;
       }
 
       h2 {
@@ -162,21 +171,30 @@ import { FormControl, Validators } from '@angular/forms';
 
       input {
         padding: 14px 14px 14px 44px;
+        font-size: 15px;
       }
 
       .submit-button {
         padding: 14px;
+        font-size: 15px;
       }
     }
 
     @media (max-width: 480px) {
+      .input-section {
+        margin-bottom: 24px;
+      }
+
       h1 {
         font-size: 18px;
         margin-bottom: 20px;
+        padding: 0 16px;
       }
 
       .input-container {
+        margin: 0 12px;
         padding: 16px;
+        border-radius: 20px;
       }
 
       h2 {
@@ -196,6 +214,52 @@ import { FormControl, Validators } from '@angular/forms';
       .submit-button {
         padding: 12px;
         font-size: 14px;
+      }
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        left: 12px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      h1 {
+        font-size: 16px;
+        padding: 0 12px;
+      }
+
+      .input-container {
+        margin: 0 8px;
+        padding: 14px;
+        border-radius: 16px;
+      }
+
+      h2 {
+        font-size: 16px;
+      }
+
+      .subtitle {
+        font-size: 12px;
+        margin-bottom: 14px;
+      }
+
+      input {
+        padding: 10px 10px 10px 36px;
+        font-size: 13px;
+      }
+
+      .submit-button {
+        padding: 10px;
+        font-size: 13px;
+      }
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        left: 10px;
       }
     }
   `]

@@ -138,7 +138,8 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
     .results-container {
       display: grid;
       gap: 16px;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      width: 100%;
     }
 
     .warehouse-card {
@@ -149,6 +150,7 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
       overflow: hidden;
       position: relative;
       transition: all 0.3s ease;
+      width: 100%;
     }
 
     .warehouse-card:hover {
@@ -285,6 +287,8 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 
       .warehouse-card {
         border-radius: 16px;
+        margin: 0 auto;
+        max-width: 500px;
       }
 
       .card-header {
@@ -293,6 +297,21 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 
       .card-content {
         padding: 16px;
+      }
+
+      .info-row {
+        gap: 10px;
+      }
+
+      .info-item {
+        padding: 10px;
+      }
+
+      .nearest-badge {
+        font-size: 10px;
+        padding: 3px 28px;
+        right: -28px;
+        top: 10px;
       }
     }
 
@@ -303,10 +322,17 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 
       .list-header {
         padding: 8px 16px;
+        width: 90%;
       }
 
       .list-header h2 {
         font-size: 16px;
+      }
+
+      .list-header mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
       }
 
       .warehouse-card {
@@ -331,6 +357,68 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 
       .info-item {
         padding: 10px;
+      }
+
+      .info-text {
+        gap: 1px;
+      }
+
+      .label {
+        font-size: 11px;
+      }
+
+      .value {
+        font-size: 13px;
+      }
+
+      .nearest-badge {
+        font-size: 9px;
+        padding: 2px 24px;
+        right: -26px;
+        top: 8px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .list-header {
+        padding: 8px 12px;
+        width: 95%;
+      }
+
+      .list-header h2 {
+        font-size: 15px;
+      }
+
+      .list-header mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      .warehouse-info h3 {
+        font-size: 15px;
+      }
+
+      .location {
+        font-size: 12px;
+      }
+
+      .info-item {
+        padding: 8px;
+      }
+
+      .info-item mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      .label {
+        font-size: 10px;
+      }
+
+      .value {
+        font-size: 12px;
       }
     }
   `],
