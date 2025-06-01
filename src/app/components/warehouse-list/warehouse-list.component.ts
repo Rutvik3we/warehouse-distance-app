@@ -38,7 +38,7 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
                   <mat-icon>my_location</mat-icon>
                   <div class="info-text">
                     <span class="label">To Location</span>
-                    <span class="value">{{ originZipCode }}{{ getStateDisplay(originZipCode) }}, USA</span>
+                    <span class="value">{{ originZipCode }}, {{ getState() }}, USA</span>
                   </div>
                 </div>
                 <div class="info-item">
@@ -375,8 +375,7 @@ export class WarehouseListComponent implements OnInit {
     });
   }
 
-  getStateDisplay(zipCode: string): string {
-    const stateInfo = this.zipCodeService.getStateFromZipCode(zipCode);
-    return stateInfo ? `, ${stateInfo.state}` : '';
+  getState(): string {
+    return this.zipCodeService.getStateFromZipCode(this.originZipCode);
   }
 } 
